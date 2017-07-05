@@ -1,6 +1,6 @@
 ﻿using MailKit;
 
-namespace Securcube.ImapDownloader.Data
+namespace SecurCube.ImapDownloader.Data
 {
     class EmailFolder : MyNotifyPropertyChanged
     {
@@ -17,6 +17,13 @@ namespace Securcube.ImapDownloader.Data
         {
             get { return downloadedItems; }
             set { SetField(ref downloadedItems, value, "DownloadedItems"); }
+        }
+
+        private bool isDownloading = false;
+        public bool IsDownloading
+        {
+            get { return isDownloading; }
+            set { SetField(ref isDownloading, value, "IsDownloading"); }
         }
 
         public int Unread { get; internal set; }

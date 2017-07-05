@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Securcube.ImapDownloader
+namespace SecurCube.ImapDownloader
 {
     /// <summary>
     /// Logica di interazione per App.xaml

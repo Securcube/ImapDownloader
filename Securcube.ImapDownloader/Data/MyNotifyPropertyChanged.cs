@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace Securcube.ImapDownloader.Data
+namespace SecurCube.ImapDownloader.Data
 {
    abstract class MyNotifyPropertyChanged : INotifyPropertyChanged
     {
