@@ -84,5 +84,15 @@ namespace SecurCube.ImapDownloader.Data
             get { return partialPercent; }
             set { SetField(ref partialPercent, value, "PartialPercent"); }
         }
+
+        private bool mergeFolders;
+        public bool MergeFolders
+        {
+            get { return mergeFolders; }
+            set { SetField(ref mergeFolders, value, "MergeFolders"); }
+        }
+
+
+
     }
 }

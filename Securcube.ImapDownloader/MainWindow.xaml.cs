@@ -148,6 +148,14 @@ namespace SecurCube.ImapDownloader
             ProgressBarBox.Visibility = Visibility.Visible;
             dataGridFolders.IsReadOnly = true;
 
+            dc.MergeFolders = false;
+
+            if (Directory.Exists(dc.DestinationFolder))
+            {
+                var result = MessageBox.Show(string.Format("The folder {0} already exsist.\nwould you resume the acquisition?\nClick 'Yes' to continue the acquisition. 'No' for start download all mails from the beginning", dc.DestinationFolder), "Merge mailbox", MessageBoxButton.YesNo);
+                dc.MergeFolders = result == MessageBoxResult.Yes;
+            }
+
             try
             {
                 var result = await DownloadMail();
@@ -292,7 +300,8 @@ namespace SecurCube.ImapDownloader
 
             long totalMessagesDownloaded = 0;
 
-            TotalMails = dc.EmailFolders.Sum(o => o.Messages);
+            // clone the list
+            TotalMails = dc.EmailFolders.Where(o => o.Selected).Sum(o => o.Messages);
 
             Parallel.ForEach(dc.EmailFolders, new ParallelOptions() { MaxDegreeOfParallelism = dc.ConcurrentThreads }, (folder) =>
             {
@@ -306,7 +315,16 @@ namespace SecurCube.ImapDownloader
 
                     client.ServerCertificateValidationCallback = (s, c, h, ee) => true;
 
-                    client.Connect(dc.HostName, dc.Port, dc.UseSSL);
+                    try
+                    {
+                        client.Connect(dc.HostName, dc.Port, dc.UseSSL);
+                    }
+                    catch (MailKit.Net.Imap.ImapProtocolException)
+                    {
+                        System.Threading.Thread.Sleep(100);
+                        client.Connect(dc.HostName, dc.Port, dc.UseSSL);
+                    }
+
 
                     // Note: since we don't have an OAuth2 token, disable
                     // the XOAUTH2 authentication mechanism.
@@ -323,8 +341,9 @@ namespace SecurCube.ImapDownloader
                     string destFolder = Path.Combine(dc.DestinationFolder, folder.Folder.Replace(imapFodler.DirectorySeparator, '\\'));
 
                     // If the folder already exsist I have do delete it
-                    if (Directory.Exists(destFolder))
-                        Directory.Delete(destFolder, true);
+                    if (!dc.MergeFolders)
+                        if (Directory.Exists(destFolder))
+                            Directory.Delete(destFolder, true);
 
                     Directory.CreateDirectory(destFolder);
 
@@ -351,6 +370,22 @@ namespace SecurCube.ImapDownloader
                     foreach (var item in items)
                     {
 
+                        if (dc.MergeFolders)
+                        {
+                            var file = Directory.GetFiles(destFolder, item.UniqueId + "_*.eml");
+                            if (file.Count() == 1)
+                            {
+                                log.Add("Log: message id " + item.UniqueId + " already downloaded from folder '" + folder.Folder + "'");
+                                downloadedEmails++;
+                                folder.DownloadedItems++;
+                                continue;
+                            }
+                            else
+                            {
+
+                            }
+                        }
+
                         try
                         {
                             msg = imapFodler.GetMessage(item.UniqueId);
@@ -358,7 +393,7 @@ namespace SecurCube.ImapDownloader
                         catch (Exception ex)
                         {
                             // in the meanwhile a message has been deleted.. sometimes happens
-                            log.Add("Error: can't download message with id " + item.UniqueId + " from folder '" + folder.Folder + "'");
+                            log.Add("Error: can't download message id " + item.UniqueId + " from folder '" + folder.Folder + "'");
                             continue;
                         }
 
@@ -370,7 +405,7 @@ namespace SecurCube.ImapDownloader
                         // msg not exsist
                         if (msg.From == null)
                         {
-                            log.Add("Error: can't save message with id " + item.UniqueId + " from folder '" + folder.Folder + "' because has no From field");
+                            log.Add("Error: can't save message id " + item.UniqueId + " from folder '" + folder.Folder + "' because has no From field");
                             continue;
                         }
 
@@ -401,7 +436,7 @@ namespace SecurCube.ImapDownloader
                         }
                         catch (PathTooLongException)
                         {
-                            log.Add("Warning: message with id " + item.UniqueId + " from folder '" + folder.Folder + "' will be saved with name '" + item.UniqueId + ".eml' because '" + item.UniqueId + "_" + messageIdSafeName + ".eml' is too long");
+                            log.Add("Warning: message id " + item.UniqueId + " from folder '" + folder.Folder + "' will be saved with name '" + item.UniqueId + ".eml' because '" + item.UniqueId + "_" + messageIdSafeName + ".eml' is too long");
                             using (var fs = new FileStream(Path.Combine(destFolder, item.UniqueId + ".eml"), FileMode.Create))
                             {
                                 msg.WriteTo(fs);
@@ -415,7 +450,14 @@ namespace SecurCube.ImapDownloader
 
                     folder.IsDownloading = false;
 
-                    imapFodler.Close();
+                    try
+                    {
+                        imapFodler.Close();
+                    }
+                    catch (MailKit.ServiceNotConnectedException)
+                    {
+
+                    }
 
                     log.Add("Folder: " + folder.Folder + "\t\t" + downloadedEmails + " emails");
 
@@ -437,6 +479,8 @@ namespace SecurCube.ImapDownloader
 
             log.Add("");
 
+            dc.PartialPercent = 100;
+
             string lastDirName = dc.DestinationFolder.Split('\\', '/').Where(o => !string.IsNullOrEmpty(o)).Last();
             string superDir = dc.DestinationFolder.Substring(0, dc.DestinationFolder.Length - lastDirName.Length - 1);
             string zipFileName = Path.Combine(superDir, lastDirName + ".zip");
@@ -444,9 +488,17 @@ namespace SecurCube.ImapDownloader
             if (File.Exists(zipFileName))
                 File.Delete(zipFileName);
 
+            dc.PartialPercent = 0;
+
+            dc.Speed30sec = "";
+            dc.SpeedTotal = "Creating archive..";
+
             ZipFile.CreateFromDirectory(dc.DestinationFolder, zipFileName, CompressionLevel.Fastest, true);
 
             log.Add("Export file : " + zipFileName);
+
+            dc.Speed30sec = "";
+            dc.SpeedTotal = "Calculating hash..";
 
             string md5 = CalculateMD5(zipFileName).Replace("-", "");
             string sha1 = CalculateSHA1(zipFileName).Replace("-", "");
@@ -462,6 +514,11 @@ namespace SecurCube.ImapDownloader
             File.WriteAllLines(logFileName, log);
 
             Directory.Delete(dc.DestinationFolder, true);
+
+            dc.PartialPercent = 100;
+
+            dc.Speed30sec = "DONE! ";
+            dc.SpeedTotal = string.Format(" It took {0} ", DateTime.UtcNow.Subtract(DateTime.UtcNow));
 
             return totalMessagesDownloaded;
 
