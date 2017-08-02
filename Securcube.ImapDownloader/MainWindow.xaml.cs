@@ -286,6 +286,7 @@ namespace SecurCube.ImapDownloader
         {
 
             List<string> log = new List<string>();
+            List<string> logError = new List<string>() { "", "" };
 
             DateTime dtStart = DateTime.UtcNow;
 
@@ -357,7 +358,7 @@ namespace SecurCube.ImapDownloader
                     }
                     catch (Exception)
                     {
-                        log.Add("Error: can't select imap folder '" + folder.Folder + "'");
+                        logError.Add("Error: can't select imap folder '" + folder.Folder + "'");
                         return;
                     }
 
@@ -375,7 +376,7 @@ namespace SecurCube.ImapDownloader
                             var file = Directory.GetFiles(destFolder, item.UniqueId + "_*.eml");
                             if (file.Count() == 1)
                             {
-                                log.Add("Log: message id " + item.UniqueId + " already downloaded from folder '" + folder.Folder + "'");
+                                logError.Add("Log: message id " + item.UniqueId + " already downloaded from folder '" + folder.Folder + "'");
                                 downloadedEmails++;
                                 folder.DownloadedItems++;
                                 continue;
@@ -393,7 +394,7 @@ namespace SecurCube.ImapDownloader
                         catch (Exception ex)
                         {
                             // in the meanwhile a message has been deleted.. sometimes happens
-                            log.Add("Error: can't download message id " + item.UniqueId + " from folder '" + folder.Folder + "'");
+                            logError.Add("Error: can't download message id " + item.UniqueId + " from folder '" + folder.Folder + "'");
                             continue;
                         }
 
@@ -436,7 +437,7 @@ namespace SecurCube.ImapDownloader
                         }
                         catch (PathTooLongException)
                         {
-                            log.Add("Warning: message id " + item.UniqueId + " from folder '" + folder.Folder + "' will be saved with name '" + item.UniqueId + ".eml' because '" + item.UniqueId + "_" + messageIdSafeName + ".eml' is too long");
+                            logError.Add("Warning: message id " + item.UniqueId + " from folder '" + folder.Folder + "' will be saved with name '" + item.UniqueId + ".eml' because '" + item.UniqueId + "_" + messageIdSafeName + ".eml' is too long");
                             using (var fs = new FileStream(Path.Combine(destFolder, item.UniqueId + ".eml"), FileMode.Create))
                             {
                                 msg.WriteTo(fs);
@@ -511,14 +512,14 @@ namespace SecurCube.ImapDownloader
             if (File.Exists(logFileName))
                 File.Delete(logFileName);
 
-            File.WriteAllLines(logFileName, log);
+            File.WriteAllLines(logFileName, log.Union(logError));
 
             Directory.Delete(dc.DestinationFolder, true);
 
             dc.PartialPercent = 100;
 
             dc.Speed30sec = "DONE! ";
-            dc.SpeedTotal = string.Format(" It took {0} ", DateTime.UtcNow.Subtract(DateTime.UtcNow));
+            dc.SpeedTotal = string.Format(" It took {0} ", DateTime.UtcNow.Subtract(dtStart));
 
             return totalMessagesDownloaded;
 
@@ -571,9 +572,8 @@ namespace SecurCube.ImapDownloader
                 dc.UseSSL = bool.Parse(arr[2]);
             }
 
-
-
-
         }
+
+
     }
 }

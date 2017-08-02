@@ -98,9 +98,9 @@
 
                     <StackPanel Grid.Column="1" Margin="5">
                         <TextBlock Height="15">User password</TextBlock>
-                        <TextBox Text="{Binding UserPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                        <TextBox Name="TextBoxPassword" Text="{Binding UserPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></TextBox>
                     </StackPanel>
-
+                
                 </Grid>
             </GroupBox>
 
