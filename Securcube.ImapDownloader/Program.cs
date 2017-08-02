@@ -16,7 +16,9 @@ namespace Securcube.ImapDownloader
         [STAThreadAttribute]
         public static void Main()
         {
+#if !DEBUG
             AppDomain.CurrentDomain.AssemblyResolve += OnResolveAssembly;
+#endif
             SecurCube.ImapDownloader.App.Main();
         }
 
