@@ -12,8 +12,7 @@ namespace Securcube.ImapDownloader
     class Program
     {
 
-
-        [STAThreadAttribute]
+        [STAThread]
         public static void Main()
         {
 #if !DEBUG

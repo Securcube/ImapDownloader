@@ -95,6 +95,7 @@
     </Compile>
     <Compile Include="Converters\ProgressForegroundConverter.cs" />
     <Compile Include="Data\DataContext.cs" />
+    <Compile Include="Data\Downloader.cs" />
     <Compile Include="Data\EmailFolder.cs" />
     <Compile Include="Data\MyNotifyPropertyChanged.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -121,7 +122,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

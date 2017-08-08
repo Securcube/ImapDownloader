@@ -3,9 +3,8 @@ using System.ComponentModel;
 
 namespace SecurCube.ImapDownloader.Data
 {
-   abstract class MyNotifyPropertyChanged : INotifyPropertyChanged
+    abstract class MyNotifyPropertyChanged : INotifyPropertyChanged
     {
-
 
         #region INotifyPropertyChanged
 

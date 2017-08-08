@@ -119,13 +119,14 @@
                         <DataGridTemplateColumn Header="Download">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <CheckBox IsChecked="{Binding Selected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <CheckBox IsChecked="{Binding Selected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
                         <DataGridTextColumn Header="Folder"  Binding="{Binding Folder}"></DataGridTextColumn>
-                        <DataGridTextColumn Header="Messages" Binding="{Binding Messages}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Messages" Binding="{Binding Messages}" ></DataGridTextColumn>
                         <!--<DataGridTextColumn Header="Unread" Binding="{Binding Unread}"></DataGridTextColumn>-->
                         <DataGridTextColumn Header="NextUID" Binding="{Binding NextUID}"></DataGridTextColumn>
                         <DataGridTextColumn Header="Flags" Binding="{Binding FlagsToString}"></DataGridTextColumn>
