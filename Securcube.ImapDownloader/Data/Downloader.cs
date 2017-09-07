@@ -88,7 +88,7 @@ namespace Securcube.ImapDownloader.Data
             var downloadedTime = items.Sum(o => o.Item2);
             if (downloadedTime != 0)
             {
-                s1 = downloadedData / downloadedTime;
+                s1 = downloadedData / downloadedTime * 1000;
             }
 
             // check spped from beginning
@@ -96,7 +96,7 @@ namespace Securcube.ImapDownloader.Data
             downloadedTime = DownloadSpeed.Sum(o => o.Item2);
             if (downloadedTime != 0)
             {
-                s2 = downloadedData / downloadedTime;
+                s2 = downloadedData / downloadedTime * 1000;
             }
 
             return new Tuple<double, double>(s1, s2);
@@ -152,6 +152,7 @@ namespace Securcube.ImapDownloader.Data
                     }
                     catch (ImapProtocolException)
                     {
+                        // try twice
                         System.Threading.Thread.Sleep(100);
                         client.Connect(dc.HostName, dc.Port, dc.UseSSL);
                     }
@@ -217,15 +218,26 @@ namespace Securcube.ImapDownloader.Data
                             else { }
                         }
 
+                        dt = DateTime.Now;
+                        fileSize = 0;
+
                         try
                         {
                             msg = imapFodler.GetMessage(item.UniqueId);
                         }
-                        catch (Exception ex)
+                        catch
                         {
-                            // in the meanwhile a message has been deleted.. sometimes happens
-                            logError.Add("Error: can't download message id " + item.UniqueId + " from folder '" + folder.Folder + "'");
-                            continue;
+                            // Second attempt
+                            try
+                            {
+                                msg = imapFodler.GetMessage(item.UniqueId);
+                            }
+                            catch (Exception ex)
+                            {
+                                // in the meanwhile a message has been deleted.. sometimes happens
+                                logError.Add("Error: can't download message id " + item.UniqueId + " from folder '" + folder.Folder + "'");
+                                continue;
+                            }
                         }
 
                         ProgressMails++;
@@ -254,9 +266,6 @@ namespace Securcube.ImapDownloader.Data
                             // i'll take the lst 250 characters
                             messageIdSafeName = messageIdSafeName.Substring(messageIdSafeName.Length - 250);
                         }
-
-                        dt = DateTime.Now;
-                        fileSize = 0;
                         try
                         {
                             using (var fs = new FileStream(Path.Combine(destFolder, item.UniqueId + "_" + messageIdSafeName + ".eml"), FileMode.Create))
