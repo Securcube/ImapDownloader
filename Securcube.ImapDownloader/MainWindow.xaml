@@ -19,69 +19,79 @@
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
 
-            <GroupBox Grid.Row="0" Margin="5">
-                <GroupBox.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Server"></TextBlock>
-                        <ComboBox Background="Transparent" BorderThickness="0" SelectionChanged="ComboBox_SelectionChanged">
-                            <ComboBox.Template>
-                                <ControlTemplate TargetType="{x:Type ComboBox}">
-                                    <Grid>
-                                        <ToggleButton x:Name="DropDownToggle"
-                                              HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" BorderThickness="0"
-                                              Margin="0" HorizontalContentAlignment="Right"
-                                              IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,
-                                                          RelativeSource={RelativeSource TemplatedParent}}">
-                                            <Path x:Name="BtnArrow" Height="4" Width="8" Stretch="Uniform" Margin="0,0,0,0" Fill="Black" Data="F1 M 300,-190L 310,-190L 305,-183L 301,-190 Z " />
-                                        </ToggleButton>
-                                        <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen}">
-                                            <Border x:Name="PopupBorder" HorizontalAlignment="Stretch" Height="Auto" MinWidth="{TemplateBinding ActualWidth}"
-                                                    MaxHeight="{TemplateBinding MaxDropDownHeight}" BorderBrush="Gray" BorderThickness="1" Background="White" CornerRadius="3">
-                                                <ScrollViewer x:Name="ScrollViewer" BorderThickness="0" Padding="1">
-                                                    <ItemsPresenter/>
-                                                </ScrollViewer>
-                                            </Border>
-                                        </Popup>
-                                    </Grid>
-                                </ControlTemplate>
-                            </ComboBox.Template>
-                            <ComboBox.Items>
-                                <ComboBoxItem Content="Gmail" DataContext="imap.gmail.com|993|true"></ComboBoxItem>
-                                <ComboBoxItem Content="iCloud" DataContext="imap.mail.me.com|993|true"></ComboBoxItem>
-                                <ComboBoxItem Content="Outlook.com" DataContext="outlook.office365.com|993|true"></ComboBoxItem>
-                                <ComboBoxItem Content="Yahoo!" DataContext="imap.mail.yahoo.com|993|true"></ComboBoxItem>
-                                <ComboBoxItem Content="AOL" DataContext="imap.aol.com|993|true"></ComboBoxItem>
-                                <ComboBoxItem Content="AT&amp;T" DataContext="imap.mail.att.net|993|true"></ComboBoxItem>
-                                <ComboBoxItem Content="MSN" DataContext="outlook.office365.com|993|true"></ComboBoxItem>
-                            </ComboBox.Items>
-                        </ComboBox>
-                    </StackPanel>
-                </GroupBox.Header>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Column="0" Margin="5">
-                        <TextBlock Height="15">Host name</TextBlock>
-                        <TextBox Text="{Binding HostName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-                    </StackPanel>
+            <Grid>
 
-                    <StackPanel Grid.Column="1" Margin="5" >
-                        <StackPanel>
-                            <TextBlock Height="15">Port</TextBlock>
-                            <TextBox Text="{Binding Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            
+                <GroupBox Grid.Row="0" Margin="5">
+                    <GroupBox.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Server"></TextBlock>
+                            <ComboBox Background="Transparent" BorderThickness="0" SelectionChanged="ComboBox_SelectionChanged">
+                                <ComboBox.Template>
+                                    <ControlTemplate TargetType="{x:Type ComboBox}">
+                                        <Grid>
+                                            <ToggleButton x:Name="DropDownToggle"
+                                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" BorderThickness="0"
+                                                  Margin="0" HorizontalContentAlignment="Right"
+                                                  IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,
+                                                              RelativeSource={RelativeSource TemplatedParent}}">
+                                                <Path x:Name="BtnArrow" Height="4" Width="8" Stretch="Uniform" Margin="0,0,0,0" Fill="Black" Data="F1 M 300,-190L 310,-190L 305,-183L 301,-190 Z " />
+                                            </ToggleButton>
+                                            <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen}">
+                                                <Border x:Name="PopupBorder" HorizontalAlignment="Stretch" Height="Auto" MinWidth="{TemplateBinding ActualWidth}"
+                                                        MaxHeight="{TemplateBinding MaxDropDownHeight}" BorderBrush="Gray" BorderThickness="1" Background="White" CornerRadius="3">
+                                                    <ScrollViewer x:Name="ScrollViewer" BorderThickness="0" Padding="1">
+                                                        <ItemsPresenter/>
+                                                    </ScrollViewer>
+                                                </Border>
+                                            </Popup>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </ComboBox.Template>
+                                <ComboBox.Items>
+                                    <ComboBoxItem Content="Gmail" DataContext="imap.gmail.com|993|true"></ComboBoxItem>
+                                    <ComboBoxItem Content="iCloud" DataContext="imap.mail.me.com|993|true"></ComboBoxItem>
+                                    <ComboBoxItem Content="Outlook.com" DataContext="outlook.office365.com|993|true"></ComboBoxItem>
+                                    <ComboBoxItem Content="Yahoo!" DataContext="imap.mail.yahoo.com|993|true"></ComboBoxItem>
+                                    <ComboBoxItem Content="AOL" DataContext="imap.aol.com|993|true"></ComboBoxItem>
+                                    <ComboBoxItem Content="AT&amp;T" DataContext="imap.mail.att.net|993|true"></ComboBoxItem>
+                                    <ComboBoxItem Content="MSN" DataContext="outlook.office365.com|993|true"></ComboBoxItem>
+                                </ComboBox.Items>
+                            </ComboBox>
                         </StackPanel>
-                    </StackPanel>
+                    </GroupBox.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Column="2" Margin="5 20 5 5">
-                        <CheckBox IsChecked="{Binding UseSSL, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Use SSL</CheckBox>
-                    </StackPanel>
+                        <StackPanel Grid.Column="0" Margin="5">
+                            <TextBlock Height="15">Host name</TextBlock>
+                            <TextBox Text="{Binding HostName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                        </StackPanel>
 
-                </Grid>
-            </GroupBox>
+                        <ComboBox VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Column="3" Name="SelectHistory" SelectionChanged="SelectHistory_SelectionChanged" ></ComboBox>
+
+                        <StackPanel Grid.Column="1" Margin="5" >
+                            <StackPanel>
+                                <TextBlock Height="15">Port</TextBlock>
+                                <TextBox Text="{Binding Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" Margin="5 20 5 5">
+                            <CheckBox IsChecked="{Binding UseSSL, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Use SSL</CheckBox>
+                        </StackPanel>
+
+                    </Grid>
+                </GroupBox>
+               
+                
+                
+            </Grid>
 
             <GroupBox Header="Credentials" Grid.Row="1" Margin="5">
                 <Grid>

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.Serialization;
 
 namespace SecurCube.ImapDownloader.Data
 {
+
+    [Serializable]
     class DataContext : MyNotifyPropertyChanged
     {
 
@@ -52,7 +51,6 @@ namespace SecurCube.ImapDownloader.Data
             set { SetField(ref destinationFolder, value, "DestinationFolder"); }
         }
 
-
         private int concurrentThreads = 5;
         public int ConcurrentThreads
         {
@@ -60,6 +58,7 @@ namespace SecurCube.ImapDownloader.Data
             set { SetField(ref concurrentThreads, value, "ConcurrentThreads"); }
         }
 
+        [field: NonSerializedAttribute()]
         public List<Data.EmailFolder> EmailFolders { get; internal set; }
 
 

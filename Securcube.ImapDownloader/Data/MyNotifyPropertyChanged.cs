@@ -1,13 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
+
 
 namespace SecurCube.ImapDownloader.Data
 {
+
+    [Serializable]
     abstract class MyNotifyPropertyChanged : INotifyPropertyChanged
     {
 
         #region INotifyPropertyChanged
-
+        [field: NonSerializedAttribute()]
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged(string propertyName)

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.IO;
 using System.Threading.Tasks;
 using System.Timers;
 using Securcube.ImapDownloader.Data;
+using System.Windows.Controls;
 
 namespace SecurCube.ImapDownloader
 {
@@ -25,7 +27,24 @@ namespace SecurCube.ImapDownloader
             dc.Port = 993;
 
             this.DataContext = dc;
+
             InitializeComponent();
+
+            var history = Persister.GetConnectionHistory();
+
+            if (history != null && history.Any())
+            {
+                SelectHistory.Items.Add(new ComboBoxItem() { IsEnabled = false, IsSelected = true, Content = "Select Credentials" });
+                foreach (var item in history)
+                {
+                    SelectHistory.Items.Add(new ComboBoxItem() { Content = string.Format("{0}\n{1}", item.HostName, item.UserName), DataContext = item });
+                }
+            }
+            else
+            {
+                SelectHistory.Visibility = Visibility.Collapsed;
+            }
+
         }
 
         private async void buttonTestParams_Click(object sender, RoutedEventArgs e)
@@ -38,6 +57,7 @@ namespace SecurCube.ImapDownloader
             {
                 buttonTestParams.Content = "Testing Parameters. Please wait!";
                 dataGridFolders.ItemsSource = await Downloader.GetAllFoldersAsync(dc);
+                Persister.UpdateConnectionHistory(dc);
                 buttonTestParams.Visibility = Visibility.Collapsed;
                 GridBottom.IsEnabled = true;
 
@@ -184,6 +204,23 @@ namespace SecurCube.ImapDownloader
 
         }
 
+        private void SelectHistory_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
 
+
+            if (SelectHistory.SelectedIndex > 0 && SelectHistory.SelectedItem is ComboBoxItem  &&  (SelectHistory.SelectedItem as ComboBoxItem).DataContext is Data.DataContext)
+            {
+                var _dc = (SelectHistory.SelectedItem as ComboBoxItem).DataContext as Data.DataContext;
+
+                dc.HostName = _dc.HostName;
+                dc.UserName = _dc.UserName;
+                dc.UserPassword = _dc.UserPassword;
+                dc.UseSSL = _dc.UseSSL;
+                dc.Port = _dc.Port;
+
+                SelectHistory.SelectedIndex = 0;
+            }
+
+        }
     }
 }

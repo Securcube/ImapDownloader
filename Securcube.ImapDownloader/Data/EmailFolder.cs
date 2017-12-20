@@ -1,7 +1,10 @@
 ﻿using MailKit;
+using System;
 
 namespace SecurCube.ImapDownloader.Data
 {
+
+    [Serializable]
     class EmailFolder : MyNotifyPropertyChanged
     {
 
