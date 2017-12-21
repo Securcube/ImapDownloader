@@ -255,7 +255,7 @@ namespace Securcube.ImapDownloader.Data
                         downloadedEmails++;
                         folder.DownloadedItems++;
 
-                        messageIdSafeName = System.Text.RegularExpressions.Regex.Replace(msg.Headers["Message-ID"] + "", "[<>\\/]", "");
+                        messageIdSafeName = System.Text.RegularExpressions.Regex.Replace(msg.Headers["Message-ID"] + "", "[<>\\/:]", "");
 
                         if (string.IsNullOrEmpty(messageIdSafeName))
                         {
@@ -266,6 +266,10 @@ namespace Securcube.ImapDownloader.Data
                             // i'll take the lst 250 characters
                             messageIdSafeName = messageIdSafeName.Substring(messageIdSafeName.Length - 250);
                         }
+
+                        if (!Directory.Exists(destFolder))
+                            Directory.CreateDirectory(destFolder);
+
                         try
                         {
                             using (var fs = new FileStream(Path.Combine(destFolder, item.UniqueId + "_" + messageIdSafeName + ".eml"), FileMode.Create))
