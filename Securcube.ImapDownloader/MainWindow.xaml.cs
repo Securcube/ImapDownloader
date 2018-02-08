@@ -81,9 +81,18 @@ namespace SecurCube.ImapDownloader
 
             dc.MergeFolders = false;
 
-            if (Directory.Exists(dc.DestinationFolder))
+            if (File.Exists(dc.DestinationFolder))
             {
-                var result = MessageBox.Show(string.Format("The folder {0} already exsist.\nwould you resume the acquisition?\nClick 'Yes' to continue the acquisition. 'No' for start download all mails from the beginning", dc.DestinationFolder), "Merge mailbox", MessageBoxButton.YesNo);
+                var result = MessageBox.Show(string.Format("The folder {0} already exsist.\nwould you resume the acquisition?\nClick 'Yes' to continue the acquisition. 'No' for start download all mails from the beginning", dc.DestinationFolder), "Merge mailbox", MessageBoxButton.YesNoCancel);
+
+                if (result == MessageBoxResult.Cancel)
+                {
+                    (sender as FrameworkElement).IsEnabled = true;
+                    ProgressBarBox.Visibility = Visibility.Collapsed;
+                    dataGridFolders.IsReadOnly = false;
+                    return;
+                }
+
                 dc.MergeFolders = result == MessageBoxResult.Yes;
             }
 
@@ -148,6 +157,15 @@ namespace SecurCube.ImapDownloader
             myTimer.Start();
             var result = await Downloader.DownloadMailsAsync(dc);
             myTimer.Stop();
+
+            if (dc.PartialPercent == 100)
+            {
+                ProgressBar.Foreground = System.Windows.Media.Brushes.Green;
+            }
+            else {
+                ProgressBar.Foreground =  System.Windows.Media.Brushes.PaleVioletRed;
+            }
+
             return result;
         }
 

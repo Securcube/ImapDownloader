@@ -19,7 +19,17 @@ Features
 - Multi-thread folders downloads to speedup the process
 - Support download resume in case of lost connection, errors, or whatever
 - Selective folders download
+- Also important email details are saved, such as:
+    - Email ID (IMAP folder progressive ID)
+    - MessageId
+    - Email date
+    - Email Not Readed status (marked with '_N_' in the filename)
 
+Emails are named like:
+<ID>(\_N)\_<MessageID>.eml
+examples:
+18_2723D5A69F7749030FEC@AMSPRD40.064d.mgd.msft.net.eml      <- Seen message
+25_N_141015162414KJ.05013@mscreator39.fagms.de.eml          <- Not Seen Message (or marked as Unseen)
 
 This is a sample of the log file:
 
@@ -58,11 +68,14 @@ Downloads
 ----
 ## [Click here to download the latest release](https://github.com/Securcube/ImapDownloader/releases)
 
+Known issue
+----
+When Windows crashes sometime the zip file is corrupt and no resume is supported. By the way you can open and fix the file with 7-zip.
 
 Bug reports or new requests
 ----
 Please go to http://devfarm.it/forums/forum/imapdownloader/
-We will answare as soon as you get a chance.
+We will answer as soon as we get a chance.
  
 
 Development

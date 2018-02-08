@@ -19,9 +19,7 @@
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
 
-
             <Grid>
-
             
                 <GroupBox Grid.Row="0" Margin="5">
                     <GroupBox.Header>
@@ -108,7 +106,22 @@
 
                     <StackPanel Grid.Column="1" Margin="5">
                         <TextBlock Height="15">User password</TextBlock>
-                        <TextBox Name="TextBoxPassword" Text="{Binding UserPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></TextBox>
+                        <TextBox Name="TextBoxPassword" Text="{Binding UserPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+                            <TextBox.Style>
+                                <!-- set the password slightly visible when download started -->
+                                <Style TargetType="TextBox">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="BitmapEffect">
+                                                <Setter.Value>
+                                                    <BlurBitmapEffect Radius="6" KernelType="Gaussian" />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
                     </StackPanel>
                 
                 </Grid>
@@ -184,7 +197,7 @@
 
                     <StackPanel>
 
-                        <TextBlock  Margin="5 0" Height="15">Destination Folder</TextBlock>
+                        <TextBlock  Margin="5 0" Height="15">Destination File</TextBlock>
                         <TextBox  Margin="5 0" Text="{Binding DestinationFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
 
                         <StackPanel Orientation="Horizontal">
@@ -197,7 +210,7 @@
                             <Button HorizontalAlignment="Center" Margin="5 5 5 10" Padding="10 5" FontWeight="Bold" Click="ButtonStartDownload_Click">Start Download</Button>
 
                             <Grid Name="ProgressBarBox" Visibility="Collapsed" >
-                                <ProgressBar Margin="5 5 5 8" Height="30" Name="ProgressBar" Minimum="0" Maximum="100" Value="{Binding PartialPercent}">
+                                <ProgressBar Margin="5 5 5 8" Height="30" Name="ProgressBar" Minimum="0" Maximum="100"  Foreground="LightBlue" Value="{Binding PartialPercent}">
                                     <ProgressBar.Style>
                                         <Style TargetType="ProgressBar">
                                             <Setter Property="IsIndeterminate" Value="False"></Setter>
