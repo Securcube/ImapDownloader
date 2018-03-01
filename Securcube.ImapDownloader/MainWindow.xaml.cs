@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using Securcube.ImapDownloader.Data;
 using System.Windows.Controls;
+using PcapDotNet.Core;
 
 namespace SecurCube.ImapDownloader
 {
@@ -16,6 +17,7 @@ namespace SecurCube.ImapDownloader
     {
 
         Data.DataContext dc = new Data.DataContext();
+        LivePacketDevice CapturePcapDevice { get; set; }
 
         public MainWindow()
         {
@@ -113,7 +115,6 @@ namespace SecurCube.ImapDownloader
 
         }
 
-
         private async Task<long> DownloadMail()
         {
 
@@ -155,15 +156,20 @@ namespace SecurCube.ImapDownloader
             myTimer.Interval = 5000;
             myTimer.Enabled = true;
             myTimer.Start();
-            var result = await Downloader.DownloadMailsAsync(dc);
+
+            long result = 0;
+
+            result = await Downloader.DownloadMailsAsync(dc, CapturePcapDevice);
+
             myTimer.Stop();
 
             if (dc.PartialPercent == 100)
             {
                 ProgressBar.Foreground = System.Windows.Media.Brushes.Green;
             }
-            else {
-                ProgressBar.Foreground =  System.Windows.Media.Brushes.PaleVioletRed;
+            else
+            {
+                ProgressBar.Foreground = System.Windows.Media.Brushes.PaleVioletRed;
             }
 
             return result;
@@ -226,7 +232,7 @@ namespace SecurCube.ImapDownloader
         {
 
 
-            if (SelectHistory.SelectedIndex > 0 && SelectHistory.SelectedItem is ComboBoxItem  &&  (SelectHistory.SelectedItem as ComboBoxItem).DataContext is Data.DataContext)
+            if (SelectHistory.SelectedIndex > 0 && SelectHistory.SelectedItem is ComboBoxItem && (SelectHistory.SelectedItem as ComboBoxItem).DataContext is Data.DataContext)
             {
                 var _dc = (SelectHistory.SelectedItem as ComboBoxItem).DataContext as Data.DataContext;
 
@@ -239,6 +245,42 @@ namespace SecurCube.ImapDownloader
                 SelectHistory.SelectedIndex = 0;
             }
 
+        }
+
+        private void ComboBoxPCAPDevice_DropDownOpened(object sender, EventArgs e)
+        {
+            var cb = (sender as ComboBox);
+            while (cb.Items.Count > 1)
+            {
+                cb.Items.RemoveAt(1);
+            }
+            foreach (var item in LivePacketDevice.AllLocalMachine)
+            {
+                var toolTip = "";
+
+                if (item.Addresses != null && item.Addresses.Any())
+                {
+                    toolTip = string.Join("\n", item.Addresses.Select(o => o.ToString()));
+                }
+                cb.Items.Add(new ComboBoxItem()
+                {
+                    Content = item.Description,
+                    DataContext = item,
+                    ToolTip = toolTip
+                });
+            }
+        }
+
+        private void ComboBoxPCAPDevice_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            CapturePcapDevice = null;
+            if (e.AddedItems != null && e.AddedItems.Count > 0)
+            {
+                var selItem = (e.AddedItems[0] as ComboBoxItem).DataContext as LivePacketDevice;
+                if (selItem != null)
+                    CapturePcapDevice = selItem;
+
+            }
         }
     }
 }

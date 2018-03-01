@@ -63,6 +63,5 @@ namespace Securcube.ImapDownloader.Data
 
         }
 
-
     }
 }
