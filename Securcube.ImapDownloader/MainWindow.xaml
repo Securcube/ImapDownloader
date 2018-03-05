@@ -125,9 +125,9 @@
                     </StackPanel>
 
                     <StackPanel Grid.Column="2" Margin="5">
-                        <TextBlock Height="15">Select Device to capture PCSP</TextBlock>
+                        <TextBlock Height="15">Select network device to acquire PCAP</TextBlock>
                         <ComboBox DropDownOpened="ComboBoxPCAPDevice_DropDownOpened" SelectionChanged="ComboBoxPCAPDevice_SelectionChanged">
-                            <ComboBoxItem IsSelected="True">-- no device delected --</ComboBoxItem>
+                            <ComboBoxItem IsSelected="True">-- no network device delected --</ComboBoxItem>
                         </ComboBox>
                     </StackPanel>
 

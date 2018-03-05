@@ -24,7 +24,8 @@ Features
     - MessageId
     - Email date
     - Email Not Readed status (marked with '_N_' in the filename)
-
+- PCAP acquisition of all imap commands
+	
 Emails are named like:
 <ID>(\_N)\_<MessageID>.eml
 examples:
@@ -63,6 +64,7 @@ SHA1 : 196310408C3AF3A3673DB36B0475D0D242337AD9
 Prerequisites
 ----
 - [Microsoft .NET Framework 4.6](https://www.microsoft.com/download/details.aspx?id=48130)
+- [WinPcap](https://www.winpcap.org/) - Optional
 
 Downloads
 ----

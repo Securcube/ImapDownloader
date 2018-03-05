@@ -145,6 +145,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config">
       <SubType>Designer</SubType>
@@ -161,15 +162,6 @@
     <Resource Include="mail.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\BouncyCastle.Crypto.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\MailKit.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\MimeKit.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.6 %28x86 and x64%29</ProductName>
@@ -180,12 +172,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\PcapDotNet.Base.dll" />
-    <Content Include="Resources\PcapDotNet.Core.dll" />
-    <Content Include="Resources\PcapDotNet.Core.Extensions.dll" />
-    <Content Include="Resources\PcapDotNet.Packets.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterResolveReferences">
