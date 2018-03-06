@@ -103,8 +103,12 @@ namespace SecurCube.ImapDownloader
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception: " + ex.Message);
-
+                string exMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    exMessage = ex.InnerException.Message;
+                }
+                MessageBox.Show("Exception: " + exMessage);
                 (sender as FrameworkElement).IsEnabled = true;
                 ProgressBarBox.Visibility = Visibility.Collapsed;
                 dataGridFolders.IsReadOnly = false;

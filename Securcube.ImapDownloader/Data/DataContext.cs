@@ -51,7 +51,7 @@ namespace SecurCube.ImapDownloader.Data
             set { SetField(ref destinationFolder, value, "DestinationFolder"); }
         }
 
-        private int concurrentThreads = 5;
+        private int concurrentThreads = 4;
         public int ConcurrentThreads
         {
             get { return concurrentThreads; }
