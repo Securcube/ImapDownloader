@@ -348,7 +348,7 @@ namespace Securcube.ImapDownloader.Data
                                    totalMessagesDownloaded++;
                                    folder.DownloadedItems++;
 
-                                   messageIdSafeName = System.Text.RegularExpressions.Regex.Replace(msg.Headers["Message-ID"] + "", "[<>\\/:]", "");
+                                   messageIdSafeName = System.Text.RegularExpressions.Regex.Replace(msg.Headers["Message-ID"] + "", "[|\"<>\\/:]", "");
 
                                    string msgPrefix = item.UniqueId + "";
 
